@@ -1,6 +1,2 @@
-flask==2.2.3
-pandas
-datetime
-flask_cors
-bs4
-pygame
+Flask==2.0.2
+gunicorn
