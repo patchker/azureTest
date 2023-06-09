@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enter Code</title>
+</head>
+<body>
+    <h1>Please enter the code to access the application</h1>
+    <form action="{{ url_for('enter_code') }}" method="post">
+        <label for="code">Code:</label><br>
+        <input type="text" id="code" name="code" required><br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
