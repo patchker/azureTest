@@ -60,4 +60,4 @@ jobs:
         with:
           app-name: 'patchker'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CC04E84AF4824BA3998952E118F74FB9 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0F10A86449E1490FAE15EA49005A7C83 }}
