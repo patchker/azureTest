@@ -492,18 +492,19 @@ def uruchom_debug():
 
 def debug():
     options = Options()
-    options.add_argument('--user-data-dir=/path/to/user-data')
-    options.add_argument('--profile-directory=Default')
+    # options.add_argument('--user-data-dir=/path/to/user-data')
+    # options.add_argument('--profile-directory=Default')
     options.add_argument("--start-minimized")
-    options.add_extension("windscribe.crx")
-    # options.add_argument('--headless')
-    # options.add_argument('--no-sandbox')
+    # options.add_extension("windscribe.crx")
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
 
     options.add_argument(
         "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537")
     driver = webdriver.Chrome(options=options)
     time.sleep(1)
     driver.get("https://plemiona.pl")
+    print(driver.page_source)
     time.sleep(600)
 
 @app.route('/update_data', methods=['GET'])
