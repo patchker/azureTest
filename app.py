@@ -1,6 +1,6 @@
 import os
 from flask import (Flask, redirect, render_template, request,
-                   send_from_directory, url_for, session)
+                   send_from_directory, url_for, session, flash)
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Remember to set a secret key
@@ -9,22 +9,25 @@ SECRET_CODE = 'your_secret_code'  # Set your secret code
 
 @app.route('/')
 def index():
-   if 'code' in session and session['code'] == SECRET_CODE:
+   if 'authorized' in session:
        print('Request for index page received')
        return render_template('index.html')
    else:
        return redirect(url_for('enter_code'))
+
 
 @app.route('/enter_code', methods=['GET', 'POST'])
 def enter_code():
     if request.method == 'POST':
         code = request.form.get('code')
         if code == SECRET_CODE:
-            session['code'] = code
+            session['authorized'] = True
             return redirect(url_for('index'))
         else:
-            return 'Invalid code', 403
+            flash('Invalid code, try again.')
+            return redirect(url_for('enter_code'))
     else:
+        # renderuj formularz, gdy metoda to GET
         return render_template('enter_code.html')
 
 @app.route('/favicon.ico')
@@ -34,7 +37,7 @@ def favicon():
 
 @app.route('/hello', methods=['POST'])
 def hello():
-    if 'code' not in session or session['code'] != SECRET_CODE:
+    if 'authorized' not in session:
         return 'Unauthorized', 403
 
     name = request.form.get('name')
