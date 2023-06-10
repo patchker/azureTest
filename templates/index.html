@@ -1,30 +1,139 @@
-<!doctype html>
-<head>
-    <title>Hello Azure - Python Quickstart</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-</head>
-<html>
-   <body>
-     <main>
-        <div class="px-4 py-3 my-2 text-center">
-            <img class="d-block mx-auto mb-4" src="{{ url_for('static', filename='images/azure-icon.svg') }}" alt="Azure Logo" width="192" height="192"/>
-            <!-- <img  src="/docs/5.1/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"> -->
-            <h1 class="display-6 fw-bold text-primary">Welcome to Azure</h1>            
-          </div>
-        <form method="post" action="{{url_for('hello')}}">
-            <div class="col-md-6 mx-auto text-center">
-                <label for="name" class="form-label fw-bold fs-5">Could you please tell me your name?</label>
+{% include 'top.html' %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div class="tile bg-gray-800 shadow rounded-lg p-5">
+            <span class="text-gray-500">Ostatni atak: </span>
+            <span id="ostatni-atak" class="text-blue-500 text-xl font-bold"></span>
+        </div>
+        <div class="tile bg-gray-800 shadow rounded-lg p-5">
+            <span class="text-gray-500">Ilość wysłanych ataków: </span>
+            <span id="ilosc-wyslanych" class="text-blue-500 text-xl font-bold"></span>
+        </div>
+        <div class="tile bg-gray-800 shadow rounded-lg p-5">
+            <span class="text-gray-500">Ilość niewysłanych ataków: </span>
+            <span id="ilosc-niewyslanych" class="text-blue-500 text-xl font-bold"></span>
+        </div>
+        <div class="tile bg-gray-800 shadow rounded-lg p-5">
+            <span class="text-gray-500">Ilość ataków w kolejce: </span>
+            <span id="ilosc-kolejka" class="text-blue-500 text-xl font-bold"></span>
+        </div>
+    </div>
 
-                <!-- <p class="lead mb-2">Could you please tell me your name?</p> -->
-                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
-                    <input type="text" class="form-control" id="name" name="name" style="max-width: 256px;">
-                  </div>            
-                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center my-2">
-                  <button type="submit" class="btn btn-primary btn-lg px-4 gap-3">Say Hello</button>
-                </div>            
-            </div>
-        </form>
-     </main>      
-   </body>
-</html>
+<!--
+    <form class="home mt-10 text-center" action="/" method="POST">
+        <input id="start-button" type="submit" value="START" class="w-64 h-16 bg-blue-500 hover:bg-blue-400 text-white rounded text-2xl cursor-pointer transition-colors duration-300">
+    </form>
+-->
+
+<div class="text-center text-gray-500 mt-10">
+            <label class="text-gray-500 text-xl mb-2 block">Odpalanie maszyny:</label>
+
+<div class=" mx-auto relative inline-block w-16 h-8 align-middle select-none transition duration-200 ease-in home text-center">
+
+<input type="checkbox" name="toggle" id="toggleSwitch" class="text-center mx-auto toggle-checkbox absolute block w-8 h-8 rounded-full bg-white border-4 appearance-none cursor-pointer right-checked bg-checked border-checked" />
+  <label for="toggleSwitch" class="toggle-label block overflow-hidden h-8 rounded-full bg-gray-300 cursor-pointer"></label>
+</div>
+
+    <br><br>
+        Wyłączenie maszyny chwile trwa (ok 5s), więc daj mu chwilę.
+
+</div>
+
+<script>
+    function fetchScriptStatus() {
+        fetch('/get_script_status')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const toggleSwitch = document.getElementById("toggleSwitch");
+            toggleSwitch.checked = data.status;
+            toggleSwitch.disabled = data.isStopping;
+        })
+        .catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
+    }
+
+    document.getElementById("toggleSwitch").addEventListener("change", function(e) {
+        if (this.disabled) {
+            e.preventDefault();
+            return;
+        }
+        const url = this.checked ? '/' : '/stop_script';
+        fetch(url, { method: 'POST' })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(data => {
+            console.log('Skrypt został ' + (this.checked ? 'uruchomiony' : 'zatrzymany'));
+            if (!this.checked) {
+                this.disabled = true;
+            }
+        })
+        .catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
+    });
+
+    window.onload = fetchScriptStatus; // wywołaj funkcję przy ładowaniu strony
+
+    setInterval(fetchScriptStatus, 5000); // wywołaj funkcję co 5 sekund
+</script>
+
+
+    <form class="home mt-20 text-center" action="/debug" method="POST">
+        <label class="text-gray-500 text-xl mb-2 block w-96 text-center mx-auto">Gdyby coś poszło nie tak to odpalasz debug i sam próbujesz wysłać atak, sprawdzając gdzie mógł wystąpić błąd:</label>
+        <input id="debug-button" type="submit" value="DEBUG" class="w-64 h-16 bg-red-500 hover:bg-red-400 text-white rounded text-2xl cursor-pointer transition-colors duration-300">
+    </form>
+
+<script>
+$(document).ready(function(){
+  function updateData() {
+    $.ajax({
+      url: '/update_data',
+      type: 'get',
+      success: function(data){
+        // aktualizuj dane na stronie
+        const attackTime = new Date();
+const attackParts = data['ostatni_atak'][0][0].split(':');
+let diffStr = "";
+
+if (data['ostatni_atak'] != " - ") {
+    attackTime.setHours(attackParts[0], attackParts[1], attackParts[2]);
+
+    const now = new Date();
+    const diffMs = now - attackTime; // różnica w milisekundach
+    const diffSecs = Math.round(diffMs / 1000); // różnica w sekundach
+    const diffMins = Math.round(diffSecs / 60); // różnica w minutach
+    const diffHours = Math.round(diffMins / 60); // różnica w godzinach
+
+    diffStr = `${diffSecs} sekund temu`;
+    if (diffMins > 1) {
+        diffStr = `${diffMins} minut temu`;
+    }
+    if (diffHours > 1) {
+        diffStr = `${diffHours} godzin temu`;
+    }
+}
+
+$('#ostatni-atak').html(`${data['ostatni_atak']} (${diffStr})`);
+        $('#ilosc-niewyslanych').text(data['ilosc_niewyslanych']);
+        $('#ilosc-wyslanych').text(data['ilosc_wyslanych']);
+        $('#ilosc-kolejka').text(data['ilosc_kolejka']);
+      }
+    });
+  }
+
+  updateData();  // wywołaj funkcję od razu po załadowaniu strony
+
+  setInterval(updateData, 10000);  // odświeżaj co 10 sekund
+});
+
+</script>
+{% include 'bottom.html' %}

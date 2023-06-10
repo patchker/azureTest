@@ -1,0 +1,126 @@
+{% include 'top.html' %}
+
+        <section>
+        <h1 class="text-blue-400 text-3xl py-4">SCHEDULED ATTACKS ({{ rekordy|length }}), FAKE: ({{ licznik_typow_atakow['FAKE'] }}), OFF: ({{ licznik_typow_atakow['OFF'] }}) BURZAK: ({{ licznik_typow_atakow['BURZAK'] }}) FS: ({{ licznik_typow_atakow['FAKE SZLACHCIC'] }}) SZLACHCIC: ({{ licznik_typow_atakow['SZLACHCIC'] }}) </h1>
+
+
+<div class="relative inline-block w-64">
+    <button class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 w-full mb-5">DELETE SOME DATA</button>
+    <div class="absolute left-0 mt-1 py-2 w-full bg-transparent rounded-lg shadow-xl hidden" id="dropdown">
+        <form action="{{ url_for('lista_delete_all') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete all data?');">
+            <input class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 block px-4 py-2 text-sm w-full" type="submit" value="DELETE ALL">
+        </form>
+        <form action="{{ url_for('burzaki_delete_all') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete all burzaki?');">
+            <input class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 block px-4 py-2 text-sm w-full" type="submit" value="DELETE ALL BURZAKI">
+        </form>
+        <form action="{{ url_for('grubasy_delete_all') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete all grubasy?');">
+            <input class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 block px-4 py-2 text-sm w-full" type="submit" value="DELETE ALL SZLACHCIE">
+        </form>
+        <form action="{{ url_for('fejkgrubasy_delete_all') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete all fejk grubasy?');">
+            <input class="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 block px-4 py-2 text-sm w-full" type="submit" value="DELETE ALL FEJK SZLACHCIE">
+        </form>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('button').click(function(){
+            $('#dropdown').toggleClass('hidden');
+        });
+    });
+</script>
+
+
+
+<table class="w-full text-center mb-4 border-collapse border border-gray-600 rounded-lg overflow-hidden">
+    <thead class="bg-blue-500 text-white">
+        <tr>
+            <th class="border border-gray-600 py-2 px-4">ID</th>
+            <th class="border border-gray-600 py-2 px-4">Manual send</th>
+            <th class="border border-gray-600 py-2 px-4">Type</th>
+            <th class="border border-gray-600 py-2 px-4">Attacker's Cords (XXX|YYY)</th>
+            <th class="border border-gray-600 py-2 px-4">Enemy Cords (XXX|YYY)</th>
+            <th class="border border-gray-600 py-2 px-4">massorsingle</th>
+            <th class="border border-gray-600 py-2 px-4">Date</th>
+            <th class="border border-gray-600 py-2 px-4">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for rekord in rekordy %}
+        <tr id="row-{{ rekord[0] }}" class="text-white hover:bg-gray-700 transition-colors duration-200">
+            <td class="border border-gray-600 py-2 px-4">{{ rekord[0] }}</td>
+            <td class="border border-gray-600 py-2  px-4">
+                {% if rekord[6] == '1' %}
+                    <a class="text-blue-400 hover:text-blue-300" target="_blank" href="{{ rekord[5] }}">Wyślij atak</a>
+                {% else %}
+                    Brak URL
+                {% endif %}
+            </td>
+            <td class="border border-gray-600 py-2  px-4">{{ rekord[4] }}</td>
+            <td class="border border-gray-600 py-2  px-4">{{ rekord[1] }}</td>
+            <td class="border border-gray-600 py-2 px-4" >{{ rekord[2] }}</td>
+            <td class="border border-gray-600 py-2 px-4">{{ rekord[6] }}</td>
+            <td class="border border-gray-600 py-2 px-4">{{ rekord[3] }}</td>
+            <td class="border border-gray-600 py-2 px-4">
+                <form class="edit-form inline-block" action="{{ url_for('edytuj', id=rekord[0]) }}" method="GET">
+<input class="border-2 btn-blue border-blue-500 hover:bg-blue-500 text-blue-500 hover:text-white font-bold py-2 px-4 rounded-2xl transition-all duration-100 ease-in-out transform hover:-translate-y-1 hover:scale-105 active:scale-90 shadow-lg cursor-pointer" type="submit" value="Edit">
+
+                </form>
+                <form class="delete-form inline-block" data-id="{{ rekord[0] }}" method="POST">
+<input class=" border-2 btn-red border-red-500 hover:bg-red-500 text-red-500 hover:text-white font-bold py-2 px-4 rounded-2xl transition-all duration-100 ease-in-out transform hover:-translate-y-1 hover:scale-105 active:scale-90 shadow-lg cursor-pointer" type="submit" value="Delete">
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+        <div class="flex justify-between">
+            <form action="{{ url_for('save') }}" method="GET">
+                <input class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600" type="submit" value="Add new record">
+            </form>
+            <form action="{{ url_for('massadding') }}" method="GET">
+                <input class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600" type="submit" value="Add multiple records">
+            </form>
+        </div>
+    </section>
+<script>
+
+
+
+$(document).ready(function(){
+   $(".delete-form").on('click', function(e){
+        e.preventDefault();
+        var id = $(this).data('id');
+        $.ajax({
+            url: '/usun/' + id,
+            type: 'POST',
+            success: function(result) {
+                $('#row-' + id).remove();
+            },
+            error: function(xhr, status, error) {
+                console.error('Error occurred:', error);
+            }
+        });
+    });
+
+    var rows = $("table tr");
+    for (var i = 1; i < rows.length - 1; i++) {  // Rozpocznij od 1, aby pominąć nagłówki tabeli
+        var date1Cell = $(rows[i]).find("td")[4];  // Znajdź komórkę z datą
+        var date1 = new Date(date1Cell.textContent);
+        var date2Cell = $(rows[i + 1]).find("td")[4];  // Znajdź komórkę z datą w następnym wierszu
+        var date2 = new Date(date2Cell.textContent);
+
+        var diffInMilliseconds = Math.abs(date2 - date1);
+        var diffInMinutes = diffInMilliseconds / 1000 / 60;
+
+        if (diffInMinutes < 1) {
+            $(rows[i]).find('td').css('background-color', '#FF7F7F');
+            $(rows[i + 1]).find('td').css('background-color', '#FF7F7F');
+        }
+    }
+});
+</script>
+
+{% include 'bottom.html' %}
