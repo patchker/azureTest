@@ -17,7 +17,6 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.wait import WebDriverWait
 import app
 import os
-import pygame
 
 
 
