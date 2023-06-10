@@ -122,7 +122,8 @@ def home():
             global is_stopping
             is_stopping = False
             print("[STARTED]")
-            wynik = uruchom_moj_skrypt()
+            #wynik = uruchom_moj_skrypt()
+            wynik = "Hej"
             return render_template('wynik.html', wynik=wynik)
 
         # Połącz się z bazą danych
