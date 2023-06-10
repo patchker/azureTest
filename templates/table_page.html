@@ -1,0 +1,39 @@
+{% include 'top.html' %}
+
+    <section>
+        <h1 class="text-blue-400 text-3xl py-4">New data ({{ table_data|length }})</h1>
+        <table class="w-full text-center mb-4 border-collapse border border-gray-600 rounded-lg overflow-hidden">
+            <thead class="bg-blue-500 text-white border-0">
+                <th class="border-0 py-2 px-10">Type</th>
+                <th class="border-0 py-2 px-10">Url</th>
+                <th class="border-0 py-2 px-10">Date</th>
+                <th class="border-0 py-2 px-10">From Village</th>
+                <th class="border-0 py-2 px-10">Target</th>
+                <th class="border-0 py-2 px-10">massorsingle</th>
+            </thead>
+            {% for attack in table_data %}
+            <tr class="text-white hover:bg-gray-700 transition-colors duration-200">
+                <td class="border border-gray-600 py-2  px-10">{{ attack['type'] }}</td>
+                <td class="border border-gray-600 py-2  px-10">{{ attack['url'] }}</td>
+                <td class="border border-gray-600 py-2  px-10">{{ attack['date'] }}</td>
+                <td class="border border-gray-600 py-2  px-10">{{ attack['from_village'] }}</td>
+                <td class="border border-gray-600 py-2  px-10">{{ attack['target'] }}</td>
+                <td class="border border-gray-600 py-2  px-10">{{ attack['massorsingle'] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <p class="text-blue-400 text-lg py-2">Czy na pewno chcesz dodać te dane do bazy?</p>
+        <form action="/add_to_db" method="POST">
+            <!-- Możesz przekazać dane tabeli jako ukryte pola formularza -->
+            {% for attack in table_data %}
+                <input type="hidden" name="type" value="{{ attack['type'] }}">
+                <input type="hidden" name="url" value="{{ attack['url'] }}">
+                <input type="hidden" name="date" value="{{ attack['date'] }}">
+                <input type="hidden" name="from_village" value="{{ attack['from_village'] }}">
+                <input type="hidden" name="target" value="{{ attack['target'] }}">
+                <input type="hidden" name="massorsingle" value="{{ attack['massorsingle'] }}">
+            {% endfor %}
+            <input type="submit" value="Dodaj do bazy" class="px-5 py-2 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-lg shadow-lg">
+        </form>
+    </section>
+{% include 'bottom.html' %}

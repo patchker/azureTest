@@ -1,0 +1,12 @@
+{% include 'top.html' %}
+
+        <section>
+            <form action="/process_text" method="POST">
+                <div class="flex flex-col mb-4">
+                    <label for="input_text">Wprowadź tekst (plemiona-planer.pl - TABELA!!!):</label>
+                    <textarea name="input_text" id="input_text" rows="10" cols="80" class="px-2 py-1 border rounded bg-neutral-600 text-white"></textarea>
+                </div>
+                <input type="submit" value="Przetwórz tekst" class="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600">
+            </form>
+        </section>
+{% include 'bottom.html' %}

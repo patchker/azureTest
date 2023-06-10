@@ -1,0 +1,46 @@
+{% include 'top.html' %}
+
+    <section>
+        <h1 class="text-blue-400 text-3xl py-4">NEW ATTACK</h1>
+        <form action="/zapisz" method="POST">
+            <div class="flex flex-col mb-4">
+                <label for="parametr1" class="mb-2">Attacker's coords (XXX|YYY)</label>
+                <input type="text" name="parametr1" id="parametr1" class="px-2 py-1 border rounded bg-neutral-600 text-white">
+            </div>
+            <div class="flex flex-col mb-4">
+                <label for="parametr2" class="mb-2">Enemy coords (XXX|YYY)</label>
+                <input type="text" name="parametr2" id="parametr2" class="px-2 py-1 border rounded bg-neutral-600 text-white">
+            </div>
+            <div class="flex flex-col mb-4">
+                <label for="parametr4" class="mb-2">Type</label>
+                <select name="parametr4" id="parametr4" class="px-2 py-1 border rounded bg-neutral-600 text-white">
+                                    <option value="OFF">OFF</option>
+                <option value="FAKE">FAKE</option>
+                <option value="SZLACHCIC">SZLACHCIC</option>
+                <option value="FAKE SZLACHCIC">FAKE SZLACHCIC</option>
+                <option value="BURZAK - 25 - Kuźnia">BURZAK - 25 - Kuźnia</option>
+                <option value="BURZAK - 50 - Kuźnia">BURZAK - 50 - Kuźnia</option>
+                <option value="BURZAK - 75 - Kuźnia">BURZAK - 75 - Kuźnia</option>
+                <option value="BURZAK - 100 - Kuźnia">BURZAK - 100 - Kuźnia</option>
+                <option value="BURZAK - 25 - Zagroda">BURZAK - 25 - Zagroda</option>
+                <option value="BURZAK - 50 - Zagroda">BURZAK - 50 - Zagroda</option>
+                <option value="BURZAK - 75 - Zagroda">BURZAK - 75 - Zagroda</option>
+                <option value="BURZAK - 100 - Zagroda">BURZAK - 100 - Zagroda</option>
+                <option value="BURZAK - 25 - Ratusz">BURZAK - 25 - Ratusz</option>
+                <option value="BURZAK - 50 - Ratusz">BURZAK - 50 - Ratusz</option>
+                <option value="BURZAK - 75 - Ratusz">BURZAK - 75 - Ratusz</option>
+                <option value="BURZAK - 100 - Ratusz">BURZAK - 100 - Ratusz</option>
+                <option value="BURZAK - 25 - Spichlerz">BURZAK - 25 - Spichlerz</option>
+                <option value="BURZAK - 50 - Spichlerz">BURZAK - 50 - Spichlerz</option>
+                <option value="BURZAK - 75 - Spichlerz">BURZAK - 75 - Spichlerz</option>
+                <option value="BURZAK - 100 - Spichlerz">BURZAK - 100 - Spichlerz</option>
+                </select>
+            </div>
+            <div class="flex flex-col mb-4">
+                <label for="parametr3" class="mb-2">Date:</label>
+                <input type="datetime-local" name="parametr3" id="parametr3" step="0.001" value="2023-05-15T12:34:56.789" class="px-2 py-1 border rounded bg-neutral-600 text-white">
+            </div>
+            <input type="submit" value="Save" class="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600">
+        </form>
+    </section>
+{% include 'bottom.html' %}

@@ -19,10 +19,6 @@ import app
 import os
 import pygame
 
-def beep():
-    pygame.mixer.init()
-    pygame.mixer.music.load("my_sound.mp3")  # Path to your sound file
-    pygame.mixer.music.play()
 
 
 
@@ -688,7 +684,6 @@ def scripto():
                     print("URL:", url)
                     c.execute("DELETE FROM data WHERE id = ?", (id_record,))
                     conn.commit()
-                    # beep()
 
         conn.close()
         if not znaleziono_date:
